@@ -144,13 +144,13 @@ backend2-entrega2-iarlori/
 
 ### **👥 Usuarios (`/api/users`)**
 
-| Método   | Endpoint | Descripción    | Autenticación  | Roles        |
-| -------- | -------- | -------------- | -------------  | ------------ |
-| `POST`   | `/`      | Crear usuario  | ❌             | -            |
-| `GET`    | `/`      | Listar todos   | ✅             | admin        |
-| `GET`    | `/:id`   | Obtener por ID | ✅             | admin, owner |
-| `PUT`    | `/:id`   | Actualizar     | ✅             | admin, owner |
-| `DELETE` | `/:id`   | Eliminar       | ✅             | admin        |
+| Método   | Endpoint | Descripción    | Autenticación  | Roles               |
+| -------- | -------- | -------------- | -------------  | ------------------- |
+| `POST`   | `/`      | Crear usuario  | ❌             | -                   |
+| `GET`    | `/`      | Listar todos   | ✅             | admin               |
+| `GET`    | `/:id`   | Obtener por ID | ✅             | admin, user (owner) |
+| `PUT`    | `/:id`   | Actualizar     | ✅             | admin, user (owner) |
+| `DELETE` | `/:id`   | Eliminar       | ✅             | admin               |
 
 
 ### **📦 Productos (`/api/products`)**
