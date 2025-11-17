@@ -1,76 +1,168 @@
-# Entrega 1: Backend II - Diseño y Arquitectura Backend
+# 🚀 Ecommerce Backend - Entrega Final
 
-## Descripción
+## 📋 Descripción del Proyecto
 
-Este proyecto implementa un **sistema de gestión de usuarios** con **CRUD completo**, **autenticación JWT** y **autorización** usando **Passport**. Incluye:
+Este proyecto implementa un sistema ecommerce utilizando patrones de diseño modernos, sistema de autenticación JWT, autorización por roles, gestión de carritos, proceso de compra con tickets y sistema de recuperación de contraseña.
 
-- Registro de usuarios con encriptación de contraseña (`bcrypt`).
-- Login con generación de token JWT.
-- Ruta protegida `/current` que devuelve los datos del usuario autenticado.
-- Asociación automática de un **carrito vacío** a cada usuario.
-- Población de datos relacionados (`populate`) para mostrar el carrito en las respuestas.
-- Manejo robusto de errores.
-- Documentación completa y colección de Postman para pruebas.
+## 🏗️ Arquitectura y Patrones Implementados
 
----
+### **Patrones de Diseño**
+- ✅ **Repository Pattern** - Separación entre lógica de negocio y acceso a datos
+- ✅ **DAO (Data Access Object)** - Abstracción de la capa de persistencia
+- ✅ **DTO (Data Transfer Object)** - Transferencia segura de datos entre capas
+- ✅ **MVC (Model-View-Controller)** - Arquitectura escalable
 
-## Requisitos Técnicos
-
-| Herramienta       | Versión recomendada |
-|-------------------|---------------------|
-| Node.js           | v20.19.5 o superior |
-| MongoDB           | v7.0+ (local o servicio) |
-| npm               | v10+                |
-| Postman           | Última versión      |
-| MongoDB Compass   | Opcional (para inspección) |
+### **Características Principales**
+- 🔐 **Autenticación JWT** con Passport.js
+- 👥 **Sistema de Roles** (admin/user) con autorización granular
+- 🛒 **Gestión de Carritos** con validación de propiedad
+- 🎫 **Sistema de Tickets** para formalizar compras
+- 📧 **Recuperación de Contraseña** con enlaces expirables
+- 🛡️ **Middleware de Seguridad** robusto
+- 📊 **Validación de Stock** 
 
 ---
 
+## 🛠️ Tecnologías y Versiones
 
-## Estructura del proyecto
-
-   backend2-entrega1-iarlori/
-├── docs/
-│   ├── README.md                          ← Documentación
-│   └── backend2-entrega1-iarlori.postman_collection.json
-├── src/
-│   ├── config/
-│   │   ├── database.js                    ← Conexión a MongoDB
-│   │   └── passport.config.js             ← Estrategia JWT
-│   ├── middleware/
-│   │   └── auth.js                        ← Middleware de autenticación
-│   ├── models/
-│   │   ├── User.js                        ← Modelo de Usuario
-│   │   └── Cart.js                        ← Modelo de Carrito
-│   ├── routes/
-│   │   ├── users.router.js                ← CRUD de usuarios
-│   │   └── sessions.router.js             ← Login y /current
-│   └── utils/
-│       └── jwt.js                         ← Generación y verificación de tokens
-├── .env                                       ← Variables de entorno
-├── .gitignore
-├── app.js                                     ← Archivo principal
-├── package.json
-└── package-lock.json
+| Tecnología     | Versión en tu proyecto | Uso                          |
+| -------------- | ---------------------- | ---------------------------- |
+| **Node.js**    | v20.19.5+              | Runtime principal            |
+| **Express.js** | ^5.1.0                 | Framework web                |
+| **MongoDB**    | v7.0+                  | Base de datos NoSQL          |
+| **Mongoose**   | ^8.19.2                | ODM para MongoDB             |
+| **JWT**        | ^9.0.2                 | Tokens de autenticación      |
+| **Bcrypt**     | ^6.0.0                 | Encriptación de contraseñas  |
+| **Nodemailer** | ^7.0.10                | Sistema de emails            |
+| **UUID**       | ^13.0.0                | Generación de códigos únicos |
 
 
+---
+
+## 📁 Estructura del Proyecto
 
 
-# Endpoints de la API
+backend2-entrega1-iarlori/
+├── 📂 docs/
+│ ├── README.md # Documentación completa
+│ └── postman_collection.json
+├── 📂 src/
+│ ├── 📂 config/
+│ │ ├── database.js # Conexión MongoDB
+│ │ ├── passport.config.js # Estrategia JWT
+│ │ └── mailer.js # Configuración Nodemailer
+│ ├── 📂 controllers/ # Lógica de endpoints
+│ │ ├── cart.controller.js
+│ │ ├── product.controller.js
+│ │ ├── purchase.controller.js
+│ │ └── user.controller.js
+│ ├── 📂 daos/mongodb/ # Data Access Objects
+│ │ ├── CartDAO.js
+│ │ ├── ProductDAO.js
+│ │ ├── TicketDAO.js
+│ │ └── UserDAO.js
+│ ├── 📂 dtos/ # Data Transfer Objects
+│ │ ├── CartDTO.js
+│ │ ├── CurrentUserDTO.js
+│ │ ├── ProductDTO.js
+│ │ ├── TicketDTO.js
+│ │ └── UserDTO.js
+│ ├── 📂 middleware/ # Middlewares personalizados
+│ │ ├── auth.js # Autenticación JWT
+│ │ ├── authorization.js # Control de roles
+│ │ └── cartAuthorization.js # Autorización carritos
+│ ├── 📂 models/ # Modelos de datos
+│ │ ├── User.js
+│ │ ├── Cart.js
+│ │ ├── Product.js
+│ │ └── Ticket.js
+│ ├── 📂 repositories/ # Patrón Repository
+│ │ ├── CartRepository.js
+│ │ ├── ProductRepository.js
+│ │ ├── TicketRepository.js
+│ │ └── UserRepository.js
+│ ├── 📂 routes/ # Definición de rutas
+│ │ ├── carts.router.js
+│ │ ├── products.router.js
+│ │ ├── sessions.router.js
+│ │ ├── tickets.router.js
+│ │ └── users.router.js
+│ ├── 📂 services/ # Lógica de negocio
+│ │ ├── mail.service.js
+│ │ └── password.service.js
+│ ├── 📂 utils/ # Utilidades
+│ │ ├── jwt.js
+│ │ └── password.js
+│ └── app.js # Aplicación principal
+├── 📄 .env # Variables de entorno
+├── 📄 .env.example # Ejemplo de variables
+├── 📄 package.json
+└── 📄 package-lock.json
 
-## Endpoints de Usuarios (/api/users)
 
-| Método  | URL              | Descripción      | Autenticación |
-|---------|------------------|------------------|---------------|
-| POST    | /api/users       | Crear usuario    | No            |
-| GET     | /api/users       | Listar todos     | No            |
-| GET     | /api/users/:id   | Obtener por ID   | No            |
-| PUT     | /api/users/:id   | Actualizar       | No            |
-| DELETE  | /api/users/:id   | Eliminar         | No            |
+---
 
-## Endpoints de Sesiones (/api/sessions)
+## 🔐 Sistema de Autenticación y Autorización
 
-| Método  | URL                    | Descripción      | Autenticación   |
-|---------|------------------------|------------------|-----------------|
-| POST    | /api/sessions/login    | Iniciar sesión   | No              |
-| GET     | /api/sessions/current  | Usuario actual   | JWT (Bearer)    |
+### **Roles Implementados**
+- **`user`**: Usuario regular, puede gestionar su carrito y realizar compras
+- **`admin`**: Administrador, gestiona productos y usuarios
+
+### **Estrategias de Seguridad**
+- **JWT Bearer Token** para autenticación
+- **Middleware de autorización** por roles
+- **Validación de propiedad** para carritos
+- **DTOs para evitar información sensible**
+
+---
+
+## 🎯 Endpoints de la API
+
+### **🔐 Autenticación (`/api/sessions`)**
+
+| Método | Endpoint                  | Descripción            | Autenticación  | Roles       |
+| ------ | ------------------------- | ---------------------- | -------------  | ----------- |
+| `POST` | `/login`                  | Iniciar sesión         | ❌             | -           |
+| `GET`  | `/current`                | Usuario actual (DTO)   | ✅             | user, admin |
+| `POST` | `/request-password-reset` | Solicitar recuperación | ❌             | -           |
+| `POST` | `/reset-password`         | Restablecer contraseña | ❌             | -           |
+
+
+### **👥 Usuarios (`/api/users`)**
+
+| Método   | Endpoint | Descripción    | Autenticación  | Roles        |
+| -------- | -------- | -------------- | -------------  | ------------ |
+| `POST`   | `/`      | Crear usuario  | ❌             | -            |
+| `GET`    | `/`      | Listar todos   | ✅             | admin        |
+| `GET`    | `/:id`   | Obtener por ID | ✅             | admin, owner |
+| `PUT`    | `/:id`   | Actualizar     | ✅             | admin, owner |
+| `DELETE` | `/:id`   | Eliminar       | ✅             | admin        |
+
+
+### **📦 Productos (`/api/products`)**
+
+| Método   | Endpoint | Descripción      | Autenticación  | Roles |
+| -------- | -------- | ---------------- | -------------  | ----- |
+| `POST`   | `/`      | Crear producto   | ✅             | admin |
+| `GET`    | `/`      | Listar productos | ❌             | -     |
+| `PUT`    | `/:pid`  | Actualizar       | ✅             | admin |
+| `DELETE` | `/:pid`  | Eliminar         | ✅             | admin |
+
+
+### **🛒 Carritos (`/api/carts`)**
+
+| Método | Endpoint             | Descripción      | Autenticación  | Roles        |
+| ------ | -------------------- | ---------------- | -------------  | ------------ |
+| `POST` | `/:cid/product/:pid` | Agregar producto | ✅             | user (owner) |
+| `POST` | `/:cid/purchase`     | Finalizar compra | ✅             | user (owner) |
+
+
+### **🎫 Tickets (`/api/tickets`)**
+
+| Método | Endpoint      | Descripción    | Autenticación  | Roles       |
+| ------ | ------------- | -------------- | -------------  | ----------- |
+| `GET`  | `/my-tickets` | Mis tickets    | ✅             | user        |
+| `GET`  | `/:code`      | Obtener ticket | ✅             | user, admin |
+
+
+---

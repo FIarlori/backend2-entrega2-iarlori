@@ -1,207 +1,733 @@
 {
   "info": {
-    "name": "Backend II - Entrega 1 - iarlori",
-    "description": "Colección de Postman para probar los endpoints del proyecto Backend II: CRUD de usuarios y autenticación con JWT",
+    "name": "Ecommerce API - Entrega Final",
+    "description": "Colección completa para testing del ecommerce con arquitectura profesional, Repository Pattern, DTOs, autorización por roles y sistema de tickets",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "cartId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ticketCode",
+      "value": "",
+      "type": "string"
+    }
+  ],
   "item": [
     {
-      "name": "Crear usuario",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"first_name\": \"Juan\",\n  \"last_name\": \"Pérez\",\n  \"email\": \"juan@example.com\",\n  \"age\": 30,\n  \"password\": \"123456\"\n}"
+      "name": "🎯 1. SETUP - Crear Usuarios Iniciales",
+      "item": [
+        {
+          "name": "Register User (Usuario Normal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Juan\",\n  \"last_name\": \"Perez\",\n  \"email\": \"juan.perez@test.com\",\n  \"age\": 25,\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8080/api/users",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "users"]
+        {
+          "name": "Register Admin User (Usuario Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Admin\",\n  \"last_name\": \"User\", \n  \"email\": \"admin@admin.com\",\n  \"age\": 30,\n  \"password\": \"admin123\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Obtener todos los usuarios",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/users",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "users"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Obtener usuario por ID",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/users/:id",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "users", ":id"],
-          "variable": [
+      "name": "🔐 2. AUTENTICACIÓN - Sessions & DTO /current",
+      "item": [
+        {
+          "name": "Login User (Usuario Normal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan.perez@test.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/sessions/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["sessions", "login"]
+            }
+          },
+          "response": [],
+          "event": [
             {
-              "key": "id",
-              "value": "replace_with_user_id",
-              "description": "Reemplaza con el ID del usuario (obtenido de GET /api/users o MongoDB Compass)"
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('token', response.token);",
+                  "    pm.collectionVariables.set('userId', response.user.id);",
+                  "    pm.collectionVariables.set('cartId', response.user.cart);",
+                  "    console.log('✅ Token de usuario guardado');",
+                  "    console.log('🔑 Token:', response.token);",
+                  "    console.log('👤 User ID:', response.user.id);",
+                  "    console.log('🛒 Cart ID:', response.user.cart);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Admin (Usuario Administrador)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@admin.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/sessions/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["sessions", "login"]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('adminToken', response.token);",
+                  "    console.log('✅ Token de admin guardado');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /current - Verificar DTO (Sin info sensible)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/sessions/current",
+              "host": ["{{baseUrl}}"],
+              "path": ["sessions", "current"]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"DTO no contiene información sensible\", function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.not.have.property('password');",
+                  "    pm.expect(response).to.not.have.property('age');",
+                  "    pm.expect(response).to.have.property('name');",
+                  "    pm.expect(response).to.have.property('email');",
+                  "    pm.expect(response).to.have.property('role');",
+                  "    pm.expect(response).to.have.property('cart');",
+                  "    console.log('✅ DTO funciona correctamente - Sin info sensible');",
+                  "});"
+                ]
+              }
             }
           ]
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Actualizar usuario",
-      "request": {
-        "method": "PUT",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"first_name\": \"Juan Carlos\",\n  \"age\": 31\n}"
+      "name": "📧 3. RECUPERACIÓN DE CONTRASEÑA",
+      "item": [
+        {
+          "name": "Request Password Reset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan.perez@test.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/sessions/request-password-reset",
+              "host": ["{{baseUrl}}"],
+              "path": ["sessions", "request-password-reset"]
+            }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8080/api/users/:id",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "users", ":id"],
-          "variable": [
+        {
+          "name": "Reset Password (Simulación - usar token real del email)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"token_generado_del_email_aqui\",\n  \"newPassword\": \"nueva123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/sessions/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["sessions", "reset-password"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📦 4. PRODUCTOS - Repository Pattern & Autorización Admin",
+      "item": [
+        {
+          "name": "Create Product (Como Admin) - ✅ Debería funcionar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Laptop Gaming Pro\",\n  \"description\": \"Laptop para gaming de última generación\",\n  \"code\": \"LAPTOP001\",\n  \"price\": 1500,\n  \"stock\": 10,\n  \"category\": \"electronics\",\n  \"thumbnails\": [\"https://example.com/image1.jpg\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            }
+          },
+          "response": [],
+          "event": [
             {
-              "key": "id",
-              "value": "replace_with_user_id",
-              "description": "Reemplaza con el ID del usuario"
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('productId', response.product.id);",
+                  "    console.log('✅ Producto creado exitosamente');",
+                  "    console.log('📦 Product ID:', response.product.id);",
+                  "    console.log('🔍 Usando Repository Pattern');",
+                  "}"
+                ]
+              }
             }
           ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Eliminar usuario",
-      "request": {
-        "method": "DELETE",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/users/:id",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "users", ":id"],
-          "variable": [
+        },
+        {
+          "name": "Create Product (Como User) - ❌ Debería fallar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Producto No Autorizado\",\n  \"description\": \"Este producto no debería crearse\",\n  \"code\": \"NOAUTH001\",\n  \"price\": 100,\n  \"stock\": 5,\n  \"category\": \"test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Products (Público) - Con DTOs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            }
+          },
+          "response": [],
+          "event": [
             {
-              "key": "id",
-              "value": "replace_with_user_id",
-              "description": "Reemplaza con el ID del usuario"
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Respuesta con DTOs de productos\", function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('products');",
+                  "    if (response.products && response.products.length > 0) {",
+                  "        const product = response.products[0];",
+                  "        pm.expect(product).to.have.property('id');",
+                  "        pm.expect(product).to.have.property('title');",
+                  "        pm.expect(product).to.have.property('price');",
+                  "        console.log('✅ DTOs de productos funcionando correctamente');",
+                  "    }",
+                  "});"
+                ]
+              }
             }
           ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Iniciar sesión",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"juan@example.com\",\n  \"password\": \"123456\"\n}"
         },
-        "url": {
-          "raw": "http://localhost:8080/api/sessions/login",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "sessions", "login"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Obtener usuario actual",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{jwt_token}}",
-            "description": "Reemplaza {{jwt_token}} con el token obtenido de POST /api/sessions/login"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:8080/api/sessions/current",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "sessions", "current"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Prueba login con credenciales inválidas",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"juan@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+        {
+          "name": "Update Product (Como Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 1400,\n  \"stock\": 15\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}"]
+            }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8080/api/sessions/login",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "sessions", "login"]
+        {
+          "name": "Delete Product (Como Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}"]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Prueba /current sin token",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/sessions/current",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "sessions", "current"]
+      "name": "🛒 5. CARRITO - Autorización Usuario & Propiedad",
+      "item": [
+        {
+          "name": "Add Product to Cart (Usuario en SU carrito) - ✅ Debería funcionar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/{{cartId}}/product/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "{{cartId}}", "product", "{{productId}}"]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    console.log('✅ Producto agregado al carrito exitosamente');",
+                  "    console.log('🛒 Respuesta con CartDTO:');",
+                  "    console.log('   Total items:', response.cart.totalItems);",
+                  "    console.log('   Total amount:', response.cart.totalAmount);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Add Product to Cart (Admin en carrito de user) - ❌ Debería fallar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/{{cartId}}/product/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "{{cartId}}", "product", "{{productId}}"]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
+    },
+    {
+      "name": "🎫 6. COMPRA & TICKETS - Lógica Completa de Compra",
+      "item": [
+        {
+          "name": "Purchase Cart - Proceso Completo de Compra",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/{{cartId}}/purchase",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "{{cartId}}", "purchase"]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('ticketCode', response.ticket.code);",
+                  "    console.log('✅ Compra procesada exitosamente');",
+                  "    console.log('🎫 Ticket Code:', response.ticket.code);",
+                  "    console.log('💰 Total:', response.ticket.amount);",
+                  "    console.log('📦 Productos comprados:', response.summary.purchased);",
+                  "    console.log('❌ Productos fallidos:', response.summary.failed);",
+                  "    ",
+                  "    // Verificar que el ticket tiene todos los campos requeridos",
+                  "    pm.test(\"Ticket generado correctamente\", function() {",
+                  "        pm.expect(response.ticket).to.have.property('code');",
+                  "        pm.expect(response.ticket).to.have.property('purchase_datetime');",
+                  "        pm.expect(response.ticket).to.have.property('amount');",
+                  "        pm.expect(response.ticket).to.have.property('purchaser');",
+                  "        pm.expect(response.ticket).to.have.property('products');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get User Tickets",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tickets/my-tickets",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "my-tickets"]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    console.log('✅ Tickets obtenidos exitosamente');",
+                  "    console.log('🎫 Cantidad de tickets:', response.tickets.length);",
+                  "    pm.test(\"Tickets con DTOs\", function() {",
+                  "        if (response.tickets.length > 0) {",
+                  "            const ticket = response.tickets[0];",
+                  "            pm.expect(ticket).to.have.property('code');",
+                  "            pm.expect(ticket).to.have.property('amount');",
+                  "            pm.expect(ticket).to.have.property('purchaser');",
+                  "        }",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Ticket by Code",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tickets/{{ticketCode}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "{{ticketCode}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👥 7. USUARIOS - Management",
+      "item": [
+        {
+          "name": "Get All Users (Admin only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    console.log('✅ Usuarios obtenidos exitosamente');",
+                  "    console.log('👥 Total usuarios:', response.count);",
+                  "    pm.test(\"Usuarios con UserDTO\", function() {",
+                  "        if (response.users.length > 0) {",
+                  "            const user = response.users[0];",
+                  "            pm.expect(user).to.have.property('id');",
+                  "            pm.expect(user).to.have.property('email');",
+                  "            pm.expect(user).to.have.property('role');",
+                  "        }",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{userId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Juan Carlos\",\n  \"age\": 26\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{userId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🧪 8. TESTING DE AUTORIZACIÓN - Verificar Seguridad",
+      "item": [
+        {
+          "name": "Try Purchase as Admin (Should Fail) - ❌",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/{{cartId}}/purchase",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "{{cartId}}", "purchase"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Try Access Other User Cart (Should Fail) - ❌",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/123456789012345678901234/product/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "123456789012345678901234", "product", "{{productId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Try Create Product as User (Should Fail) - ❌",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Producto No Autorizado\",\n  \"description\": \"Este no debería crearse\",\n  \"code\": \"BLOCKED001\",\n  \"price\": 100,\n  \"stock\": 5,\n  \"category\": \"test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }
