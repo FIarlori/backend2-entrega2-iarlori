@@ -42,62 +42,76 @@ Este proyecto implementa un sistema ecommerce utilizando patrones de diseño mod
 ## 📁 Estructura del Proyecto
 
 
-backend2-entrega1-iarlori/
-├── 📂 docs/
-│ ├── README.md # Documentación completa
-│ └── postman_collection.json
-├── 📂 src/
-│ ├── 📂 config/
-│ │ ├── database.js # Conexión MongoDB
-│ │ ├── passport.config.js # Estrategia JWT
-│ │ └── mailer.js # Configuración Nodemailer
-│ ├── 📂 controllers/ # Lógica de endpoints
-│ │ ├── cart.controller.js
-│ │ ├── product.controller.js
-│ │ ├── purchase.controller.js
-│ │ └── user.controller.js
-│ ├── 📂 daos/mongodb/ # Data Access Objects
-│ │ ├── CartDAO.js
-│ │ ├── ProductDAO.js
-│ │ ├── TicketDAO.js
-│ │ └── UserDAO.js
-│ ├── 📂 dtos/ # Data Transfer Objects
-│ │ ├── CartDTO.js
-│ │ ├── CurrentUserDTO.js
-│ │ ├── ProductDTO.js
-│ │ ├── TicketDTO.js
-│ │ └── UserDTO.js
-│ ├── 📂 middleware/ # Middlewares personalizados
-│ │ ├── auth.js # Autenticación JWT
-│ │ ├── authorization.js # Control de roles
-│ │ └── cartAuthorization.js # Autorización carritos
-│ ├── 📂 models/ # Modelos de datos
-│ │ ├── User.js
-│ │ ├── Cart.js
-│ │ ├── Product.js
-│ │ └── Ticket.js
-│ ├── 📂 repositories/ # Patrón Repository
-│ │ ├── CartRepository.js
-│ │ ├── ProductRepository.js
-│ │ ├── TicketRepository.js
-│ │ └── UserRepository.js
-│ ├── 📂 routes/ # Definición de rutas
-│ │ ├── carts.router.js
-│ │ ├── products.router.js
-│ │ ├── sessions.router.js
-│ │ ├── tickets.router.js
-│ │ └── users.router.js
-│ ├── 📂 services/ # Lógica de negocio
-│ │ ├── mail.service.js
-│ │ └── password.service.js
-│ ├── 📂 utils/ # Utilidades
-│ │ ├── jwt.js
-│ │ └── password.js
-│ └── app.js # Aplicación principal
-├── 📄 .env # Variables de entorno
-├── 📄 .env.example # Ejemplo de variables
-├── 📄 package.json
-└── 📄 package-lock.json
+backend2-entrega2-iarlori/
+├── docs/
+│   ├── README.md                  # Documentación completa
+│   └── postman_collection.json    # Colección de Postman
+│
+├── src/
+│   ├── config/                    # Configuraciones
+│   │   ├── database.js            # Conexión MongoDB
+│   │   ├── passport.config.js     # Estrategia JWT (Passport)
+│   │   └── mailer.js              # Configuración Nodemailer
+│
+│   ├── controllers/               # Controladores
+│   │   ├── cart.controller.js
+│   │   ├── product.controller.js
+│   │   ├── purchase.controller.js
+│   │   └── user.controller.js
+│
+│   ├── daos/
+│   │   └── mongodb/               # Data Access Objects
+│   │       ├── CartDAO.js
+│   │       ├── ProductDAO.js
+│   │       ├── TicketDAO.js
+│   │       └── UserDAO.js
+│
+│   ├── dtos/                      # Data Transfer Objects
+│   │   ├── CartDTO.js
+│   │   ├── CurrentUserDTO.js
+│   │   ├── ProductDTO.js
+│   │   ├── TicketDTO.js
+│   │   └── UserDTO.js
+│
+│   ├── middleware/                # Middlewares
+│   │   ├── auth.js                # Autenticación JWT
+│   │   ├── authorization.js       # Control de roles
+│   │   └── cartAuthorization.js   # Autorización de carritos
+│
+│   ├── models/                    # Modelos Mongoose
+│   │   ├── User.js
+│   │   ├── Cart.js
+│   │   ├── Product.js
+│   │   └── Ticket.js
+│
+│   ├── repositories/              # Patrón Repository
+│   │   ├── CartRepository.js
+│   │   ├── ProductRepository.js
+│   │   ├── TicketRepository.js
+│   │   └── UserRepository.js
+│
+│   ├── routes/                    # Rutas
+│   │   ├── carts.router.js
+│   │   ├── products.router.js
+│   │   ├── sessions.router.js
+│   │   ├── tickets.router.js
+│   │   └── users.router.js
+│
+│   ├── services/                  # Servicios
+│   │   ├── mail.service.js
+│   │   └── password.service.js
+│
+│   ├── utils/                     # Utilidades
+│   │   ├── jwt.js
+│   │   └── password.js
+│
+│   └── app.js                     # Aplicación principal
+│
+├── .env                           # Variables de entorno
+├── .env.example                   # Ejemplo de variables
+├── package.json
+└── package-lock.json
+
 
 
 ---
